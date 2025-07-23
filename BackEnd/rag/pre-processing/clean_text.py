@@ -8,7 +8,7 @@ def clean_text(text):
     fix_unicode=True,
     unicode_norm=True,
     unicode_norm_form="NFKC",
-    remove_url=False,
+    remove_url=True,
     remove_email=True,
     remove_emoji=True,
     remove_number=False,
