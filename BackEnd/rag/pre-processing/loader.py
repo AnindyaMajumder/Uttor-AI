@@ -32,5 +32,3 @@ def load_pdf(file_path: str = r"C:\Users\Anindya Majumder\Documents\Uttor-AI\Bac
             'metadata': doc.metadata
         })
     return filtered_docs
-
-print(load_pdf()[0]['text'])

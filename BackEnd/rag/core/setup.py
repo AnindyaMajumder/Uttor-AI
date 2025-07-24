@@ -1,16 +1,27 @@
-from qdrant_client import QdrantClient
 from dotenv import load_dotenv
 import os
+from pinecone import Pinecone
 
 # Load environment variables from .env file
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', '.env'))
 
-qdrant_url = os.getenv('QDRANT_URL')
-qdrant_api_key = os.getenv('QDRANT_API_KEY')
+def pinecone_setup():
+    
+    pc = Pinecone(api_key=os.getenv('PINECONE_API_KEY'))
+    index_name = "bangla"
+    index = pc.Index(index_name)
 
-qdrant_client = QdrantClient(
-    url=qdrant_url,
-    api_key=qdrant_api_key,
-)
+    if not pc.has_index(index_name):
+        pc.create_index_for_model(
+            name=index_name,
+            cloud="aws",
+            region="us-east-1",
+            embed={
+                "model":"llama-text-embed-v2",
+                "field_map":{"text": "chunk_text"}
+            }
+        )
+    
+    return index
 
-print(qdrant_client.get_collections())
+print(pinecone_setup().describe_index_stats())
