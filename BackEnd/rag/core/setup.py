@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 from pinecone import Pinecone
+from pinecone import ServerlessSpec
 
 # Load environment variables from .env file
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', '.env'))
@@ -9,18 +10,16 @@ def pinecone_setup():
     
     pc = Pinecone(api_key=os.getenv('PINECONE_API_KEY'))
     index_name = "bangla"
-    index = pc.Index(index_name)
 
     if not pc.has_index(index_name):
-        pc.create_index_for_model(
+        pc.create_index(
             name=index_name,
-            cloud="aws",
-            region="us-east-1",
-            embed={
-                "model":"llama-text-embed-v2",
-                "field_map":{"text": "chunk_text"}
-            }
-        )
+            dimension=3072,
+            metric="cosine",
+            spec=ServerlessSpec(cloud="aws", region="us-east-1"),
+    )
+        
+    index = pc.Index(index_name)
     
     return index
 

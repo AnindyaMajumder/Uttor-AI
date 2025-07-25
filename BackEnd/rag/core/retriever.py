@@ -1,11 +1,30 @@
+import os
+import openai
+from dotenv import load_dotenv
+from langchain_openai import OpenAIEmbeddings
+from langchain_pinecone import PineconeVectorStore  
+from pinecone import Pinecone
 
-def retriever(query: str, k: int = 3, vectorstore=None):
-    return vectorstore.similarity_search(  
-        query,  # search query  
-        k=3  # 3 most relevant docs  
-    )  
+# Load environment variables
+load_dotenv()
 
-# Response:
-# [Document(page_content='Benito Amilcare Andrea Mussolini KSMOM GCTE (29 July 1883 – 28 April 1945) was an Italian politician and journalist...', metadata={'chunk': 0.0, 'source': 'https://simple.wikipedia.org/wiki/Benito%20Mussolini', 'title': 'Benito Mussolini', 'wiki-id': '6754'}),  
-# Document(page_content='Fascism as practiced by Mussolini\nMussolini\'s form of Fascism, "Italian Fascism"- unlike Nazism, the racist ideology...', metadata={'chunk': 1.0, 'source': 'https://simple.wikipedia.org/wiki/Benito%20Mussolini', 'title': 'Benito Mussolini', 'wiki-id': '6754'}),  
-# Document(page_content='Veneto was made part of Italy in 1866 after a war with Austria. Italian soldiers won Latium in 1870. That was when...', metadata={'chunk': 5.0, 'source': 'https://simple.wikipedia.org/wiki/Italy', 'title': 'Italy', 'wiki-id': '363'})]
+# Configuration
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+
+pc = Pinecone(api_key=PINECONE_API_KEY)
+index = pc.Index("bangla")
+
+embedding_model = OpenAIEmbeddings(
+        model="text-embedding-3-large",
+        openai_api_key=OPENAI_API_KEY,
+    )
+
+def retriever():
+    vectorstore = PineconeVectorStore(index=index, embedding=embedding_model)
+    results = vectorstore.as_retriever(
+        search_type="similarity_score_threshold",
+        search_kwargs={"k": 3, "score_threshold": 0.6},
+    )
+    
+    return results

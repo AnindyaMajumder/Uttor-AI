@@ -1,0 +1,38 @@
+import sys
+import os
+# sys.path.append(os.path.join(os.path.dirname(__file__), 'pre-processing'))
+
+from preprocessing.splitter import semantic_splitter
+from preprocessing.loader import load_pdf
+from preprocessing.clean_text import clean_text
+
+# sys.path.append(os.path.join(os.path.dirname(__file__), 'core'))
+from core.embeddings import embeddings
+
+from langchain_core.documents import Document
+from uuid import uuid4
+
+
+def vectorstore(path: str = r"C:\Users\MSI\Desktop\Uttor-AI\BackEnd\rag\data\HSC26-Bangla1st-Paper.pdf"):
+    # == Load and clean PDF text ==
+    # text = load_pdf(r"C:\Users\MSI\Desktop\Uttor-AI\BackEnd\rag\data\HSC26-Bangla1st-Paper.pdf")
+    text = load_pdf()
+    print("Extracted text length:", len(text))
+
+    # Clean text
+    for i in range(len(text)):
+        text[i]["text"] = clean_text(text[i]["text"])
+
+    # Convert to Document objects for semantic splitting
+    documents = [Document(page_content=entry["text"], metadata=entry["metadata"]) for entry in text]
+
+    # Semantic splitting
+    semantic_chunks = semantic_splitter(documents)
+    print(f"Number of semantic chunks created: {len(semantic_chunks)} and type: {type(semantic_chunks)}\n")
+
+    # Embedding and upsert to Pinecone using core/embedding.py
+    uuids = [str(uuid4()) for _ in range(len(semantic_chunks))]
+
+    vectorstore = embeddings(semantic_chunks, uuids)
+
+    return vectorstore
