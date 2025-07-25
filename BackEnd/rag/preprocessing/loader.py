@@ -32,3 +32,8 @@ def load_pdf(file_path: str = r"C:\Users\Anindya Majumder\Documents\Uttor-AI\Bac
             'metadata': doc.metadata
         })
     return filtered_docs
+
+texts = load_pdf()
+with open("output.txt", "w", encoding="utf-8") as f:
+    for item in texts:
+        f.write(item['text'] + "\n")
