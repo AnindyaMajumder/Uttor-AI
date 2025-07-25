@@ -1,39 +1,31 @@
-from langchain_community.document_loaders import PyMuPDFLoader
-from langchain_core.documents import Document
+import pytesseract
+from pdf2image import convert_from_path
+from PIL import Image
+import os
 
-# def load_pdf(file_path: str = r"C:\Users\Anindya Majumder\Documents\Uttor-AI\BackEnd\rag\data\HSC26-Bangla1st-Paper.pdf", as_documents: bool = True):
-#     doc = pymupdf.open(file_path)
-#     pages = []
-#     for i, page in enumerate(doc):
-#         # Pages to remove: 1, 19, 22-40 (MCQ questions considered as noise)
-#         if i in [1, 19] or 22 <= i <= 40:
-#             continue
-#         text = page.get_text()
-#         if as_documents:
-#             pages.append(Document(page_content=text, metadata={"page": i}))
-#         else:
-#             pages.append(text)
-#     doc.close()
-#     return pages
+def load_pdf(pdf_path = "/content/HSC26-Bangla1st-Paper.pdf"):
+    images = convert_from_path(pdf_path, dpi=300)
 
-def load_pdf(file_path: str = r"C:\Users\Anindya Majumder\Documents\Uttor-AI\BackEnd\rag\data\HSC26-Bangla1st-Paper.pdf"):
-    """Returns both text and metadata for more advanced processing, skipping pages 1, 19, 22-40 (0-based)"""
-    loader = PyMuPDFLoader(file_path)
-    documents = loader.load()
+    ignore_pages = [1, 19] + list(range(22, 41))
+    result = []
 
-    # Remove pages 1, 19, 22-40 (0-based)
-    filtered_docs = []
-    for doc in documents:
-        page_num = doc.metadata.get('page', None)
-        if page_num is not None and (page_num in [1, 19] or 22 <= page_num <= 40):
+    for i, img in enumerate(images):
+        if i in ignore_pages:
+            print(f"Skipping page {i}")
             continue
-        filtered_docs.append({
-            'text': doc.page_content,
-            'metadata': doc.metadata
-        })
-    return filtered_docs
 
-texts = load_pdf()
-with open("output.txt", "w", encoding="utf-8") as f:
-    for item in texts:
-        f.write(item['text'] + "\n")
+        text = pytesseract.image_to_string(img, lang='ben')
+        doc = {
+            'text': text,
+            'metadata': {
+                'page': i
+            }
+        }
+        result.append(doc)
+        print(f"Processed page {i}/{len(images)-1}")
+    return result
+
+# texts = load_pdf()
+# with open("output.txt", "w", encoding="utf-8") as f:
+#     for item in texts:
+#         f.write(item['text'] + "\n")
