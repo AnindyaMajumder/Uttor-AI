@@ -6,8 +6,8 @@
 
 - [✨ Key Features](#-key-features)
 - [🚀 Quick Start](#-quick-start)
-- [🧾 Sample Queries and Outputs](#-Sample-Queries-and-Outputs)
-- [💬 Quesion & Answer regarding the project](#-A-few-Q&A-regarding-the-project)
+- [🧾 Sample Queries and Outputs](#-sample-queries-and-outputs)
+- [💬 Question & Answer regarding the project](#-a-few-qa-regarding-the-project)
 - [📚 API Documentation](#-api-documentation)
 - [🧪 Testing with Postman](#-testing-with-postman)
 - [🏗️ Project Structure](#️-project-structure)
@@ -15,12 +15,12 @@
 ## ✨ Key Features
 
 - 🎯 **Subject-Specific Expertise**: Focused on HSC Bangla 1st Paper content using **pytesseract** and **pdf2image** for document processing
-- 🧠 **Smart Processing**: Bengali text processing with **bnlp_toolkit** and **NLTK**
+- 🧠 **Smart Processing**: Bengali text processing with **bnlp_toolkit** 
 - 🔍 **Intelligent Retrieval**: Advanced RAG system with **Pinecone** vector database and **BAAI/bge-m3** embeddings for accurate context matching
 - 🌐 **Multilingual Input**: Accepts questions in any language 
 - 📚 **Book-First Approach**: Prioritizes answers from provided pdf
 - 🎭 **Teacher Persona**: Responds like a knowledgeable school teacher powered by **OpenAI GPT-4.1**
-- ⚡ **Fast API**: RESTful API built with **FastAPI** for easy integration
+- ⚡ **RESTful API**: RESTful API built with **FastAPI** for easy integration
 
 ## 🚀 Quick Start
 
@@ -30,6 +30,7 @@
 - OpenAI API key
 - Pinecone API key
 - Tesseract OCR (for PDF text extraction)
+- Postman (for API testing)
 
 ### Installation
 
@@ -86,16 +87,32 @@
    ```env
    OPENAI_API_KEY=your_openai_api_key_here
    PINECONE_API_KEY=your_pinecone_api_key_here
+   INDEX_NAME=bangla
    ```
 
-6. **Run the application**
+6. **Vectordb (Pinecone) Setup**
+  The script `rag/vectorstore.py` is responsible for generating embeddings from your documents and storing them in the Pinecone vector database. Make sure your database/index is set up before running the main application.
+  After setting up the database and running the embedding process, you can execute `app.py` to start the API server.
+
+1. **Run the application**
    ```bash
-      uvicorn app:app --host 127.0.0.1 --port 8000
+   uvicorn app:app --host 127.0.0.1 --port 8000
    ```
 
    The API will be available at `http://127.0.0.1:8000`
 
-##  Sample Queries and Outputs
+2. **Test on Postman**
+   
+   Enter with `POST` request at -> `http://127.0.0.1:8000`
+   Send `JSON` request as `raw body` like 
+   ```
+   {
+     "query": "অনুপমের ভাষায় সুপুরুষ কাকে বলা হয়েছে?"
+   }
+   ```
+   Another `JSON` file with short-term memory will return as resonse.
+
+## 🧾 Sample Queries and Outputs
 
 ### Bengali Queries
 
@@ -287,11 +304,11 @@ Uttor-AI/
     │   ├── embeddings.py # Embedding models
     │   ├── model.py      # Language model setup
     │   ├── retriever.py  # Document retrieval logic
-    │   └── setup.py      # Configuration setup
-    ├── data/             # Educational content
+    │   └── setup.py      # Database Index status check
+    ├── data/             # Dataset corpus for context 
     │   └── HSC26-Bangla1st-Paper.pdf
     └── preprocessing/    # Data processing
         ├── clean_text.py # Text cleaning utilities
         ├── loader.py     # Document loaders
-        └── splitter.py   # Text chunking
+        └── splitter.py   # Text chunking with semantic splitter
 ```

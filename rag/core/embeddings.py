@@ -9,10 +9,14 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+
 # Initialize Pinecone
 pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 
-index_name = "bangla"
+# Require index name from environment variable
+index_name = os.getenv("INDEX_NAME")
+if not index_name:
+    raise ValueError("INDEX_NAME environment variable must be set in .env file.")
 
 # Load the BAAI/bge-m3 model and tokenizer
 tokenizer = AutoTokenizer.from_pretrained("BAAI/bge-m3")

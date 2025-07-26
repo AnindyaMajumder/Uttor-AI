@@ -19,8 +19,13 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 
+
 pc = Pinecone(api_key=PINECONE_API_KEY)
-index = pc.Index("bangla")
+# Require index name from environment variable
+INDEX_NAME = os.getenv("INDEX_NAME")
+if not INDEX_NAME:
+    raise ValueError("INDEX_NAME environment variable must be set in .env file.")
+index = pc.Index(INDEX_NAME)
 
 tokenizer = AutoTokenizer.from_pretrained("BAAI/bge-m3")
 model = AutoModel.from_pretrained("BAAI/bge-m3")

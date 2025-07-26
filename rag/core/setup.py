@@ -6,10 +6,13 @@ from pinecone import ServerlessSpec
 # Load environment variables from .env file
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', '.env'))
 
+
 def pinecone_setup():
-    
     pc = Pinecone(api_key=os.getenv('PINECONE_API_KEY'))
-    index_name = "bangla"
+    # Require index name from environment variable
+    index_name = os.getenv("INDEX_NAME")
+    if not index_name:
+        raise ValueError("INDEX_NAME environment variable must be set in .env file.")
 
     if not pc.has_index(index_name):
         pc.create_index(
