@@ -5,8 +5,18 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser 
 
 def get_answer(query: str):
-    retriever_init = retriever()
-    ans = retriever_init.invoke(query)
+    # Get retriever results using the query
+    retriever_results = retriever(query)
+    
+    # Extract page_content from matches to create context
+    context_pieces = []
+    for match in retriever_results.get('matches', []):
+        page_content = match.get('metadata', {}).get('page_content', '')
+        if page_content:
+            context_pieces.append(page_content)
+    
+    # Join all context pieces into a single context string
+    context = '\n'.join(context_pieces)
     
     prompt, llm = model()
     chain = (
@@ -15,7 +25,7 @@ def get_answer(query: str):
         | llm
         | StrOutputParser()
     )
-    inputs = {"context": ans, "question": query}
+    inputs = {"context": context, "question": query}
     result = chain.invoke(inputs)
     return result
 

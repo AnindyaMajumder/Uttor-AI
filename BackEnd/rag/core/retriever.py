@@ -5,6 +5,13 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore  
 from pinecone import Pinecone
 
+from transformers import AutoTokenizer, AutoModel
+import torch
+from pinecone import ServerlessSpec
+from tqdm import tqdm
+import os
+from dotenv import load_dotenv
+
 # Load environment variables
 load_dotenv()
 
@@ -15,16 +22,19 @@ PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index("bangla")
 
-embedding_model = OpenAIEmbeddings(
-        model="text-embedding-3-large",
-        openai_api_key=OPENAI_API_KEY,
-    )
+tokenizer = AutoTokenizer.from_pretrained("sagorsarker/bangla-bert-base")
+model = AutoModel.from_pretrained("sagorsarker/bangla-bert-base")
 
-def retriever():
-    vectorstore = PineconeVectorStore(index=index, embedding=embedding_model)
-    results = vectorstore.as_retriever(
-        search_type="similarity_score_threshold",
-        search_kwargs={"k": 3, "score_threshold": 0.6},
-    )
-    
+def retriever(query_text: str = "রসনচৌকি' শব্দের অর্থ কী?"):
+    # Tokenize and generate the embedding for the query text
+    query_inputs = tokenizer(query_text, return_tensors="pt", padding=True, truncation=True)
+    with torch.no_grad():
+        query_outputs = model(**query_inputs)
+
+    # Extract the embeddings (mean of the last hidden state)
+    query_embeddings = query_outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
+
+    # Perform similarity search on Pinecone index
+    results = index.query(vector=query_embeddings.tolist(), top_k=10, include_metadata=True)
+
     return results
