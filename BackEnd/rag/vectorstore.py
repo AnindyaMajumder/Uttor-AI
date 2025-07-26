@@ -16,7 +16,7 @@ from uuid import uuid4
 def vectorstore(path: str = r"C:\Users\MSI\Desktop\Uttor-AI\BackEnd\rag\data\HSC26-Bangla1st-Paper.pdf"):
     # == Load and clean PDF text ==
     # text = load_pdf(r"C:\Users\MSI\Desktop\Uttor-AI\BackEnd\rag\data\HSC26-Bangla1st-Paper.pdf")
-    text = load_pdf()
+    text = load_pdf(path)
     print("Extracted text length:", len(text))
 
     # Clean text
@@ -31,8 +31,8 @@ def vectorstore(path: str = r"C:\Users\MSI\Desktop\Uttor-AI\BackEnd\rag\data\HSC
     print(f"Number of semantic chunks created: {len(semantic_chunks)} and type: {type(semantic_chunks)}\n")
 
     # Embedding and upsert to Pinecone using core/embedding.py
-    uuids = [str(uuid4()) for _ in range(len(semantic_chunks))]
+    # uuids = [str(uuid4()) for _ in range(len(semantic_chunks))]
 
-    vectorstore = embeddings(semantic_chunks, uuids)
+    vectorstore = embeddings(semantic_chunks)
 
     return vectorstore
