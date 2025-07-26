@@ -1,29 +1,42 @@
-import os
-import openai
-from langchain_openai import OpenAIEmbeddings
-from langchain_pinecone import PineconeVectorStore  
+from transformers import AutoTokenizer, AutoModel
+import torch
 from pinecone import Pinecone
+from pinecone import ServerlessSpec
+from tqdm import tqdm
+import os
+from dotenv import load_dotenv
 
-# Configuration
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-# EMBEDDING_DIMENSION = 1536
+# Load environment variables
+load_dotenv()
 
-def embeddings(docs, uuids):
-    embedding_model = OpenAIEmbeddings(
-        model="text-embedding-3-large",
-        openai_api_key=OPENAI_API_KEY,
-    )
+# Initialize Pinecone
+pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 
-    pc = Pinecone(api_key=PINECONE_API_KEY)
-    index = pc.Index("bangla")
+index_name = "bangla"
 
-    # Upsert all texts to Pinecone
-    vectorstore = PineconeVectorStore(index=index, embedding=embedding_model)
-    vectorstore.add_documents(
-        documents=docs,
-        ids=uuids,
-        # namespace="bangla",
-    )
+# Load the Bangla BERT model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained("sagorsarker/bangla-bert-base")
+model = AutoModel.from_pretrained("sagorsarker/bangla-bert-base")
+
+index = pc.Index(index_name)
+
+def embeddings(documents):
+    upsert_data = []
+
+    for doc in tqdm(documents):
+        text = doc.page_content # Access page_content from the Document object
+        # inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+        inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
+
+        # Get embeddings (mean of the last hidden state)
+        with torch.no_grad():
+            outputs = model(**inputs)
+            embeddings = outputs.last_hidden_state.mean(dim=1).squeeze().numpy()
+
+        # Upsert the data to Pinecone (embedding + metadata)
+        upsert_data.append((f"doc_{hash(text)}", embeddings.tolist(), {"page_content": text}))
+
+    # Upsert all the documents into Pinecone
+    index.upsert(vectors=upsert_data)
     
-    return vectorstore
+    return index.describe_index_stats()
