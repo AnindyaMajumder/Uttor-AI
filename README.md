@@ -6,8 +6,8 @@
 
 - [✨ Key Features](#-key-features)
 - [🚀 Quick Start](#-quick-start)
-- [💬 Quesion & Answer regarding the project](#-A-few-Q&-A-regarding-the-project)
-- [🤔 Design Choices & Rationale](#-design-choices--rationale)
+- [🧾 Sample Queries and Outputs](#-Sample-Queries-and-Outputs)
+- [💬 Quesion & Answer regarding the project](#-A-few-Q&A-regarding-the-project)
 - [📚 API Documentation](#-api-documentation)
 - [🏗️ Project Structure](#️-project-structure)
 
@@ -98,57 +98,64 @@
 
 ### Bengali Queries
 
-**Query (Bengali):**
+**Query (English):**
 ```
-রবীন্দ্রনাথ ঠাকুরের 'সোনার তরী' কবিতার মূল বিষয়বস্তু কী?
-```
-
-**Response:**
-```
-রবীন্দ্রনাথ ঠাকুরের 'সোনার তরী' কবিতাটি মূলত কবির জীবনের ক্ষণস্থায়িত্ব ও শিল্পের স্থায়িত্বের দ্বন্দ্ব নিয়ে রচিত। কবিতায় দেখা যায় যে, কৃষক তার সোনালি ধানের ফসল নিয়ে মাঝির কাছে যায়, কিন্তু মাঝি শুধু ফসল নিয়ে যায়, কৃষককে নিয়ে যায় না। এখানে ফসল হলো কবির সৃষ্টিকর্ম আর কৃষক হলো কবি নিজে। কবিতার মূল বার্তা হলো শিল্প অমর, কিন্তু শিল্পী মরণশীল।
-```
-
-**Query (Bengali):**
-```
-'আমার পথ' প্রবন্ধে কাজী নজরুল ইসলাম কী বার্তা দিয়েছেন?
+Hi
 ```
 
 **Response:**
 ```
-'আমার পথ' প্রবন্ধে কাজী নজরুল ইসলাম মানুষের ব্যক্তিত্ব ও স্বাধীনতার কথা বলেছেন। তিনি বলেছেন যে, প্রত্যেক মানুষের নিজস্ব পথ আছে এবং সে পথে চলতে গেলে কারও অনুসরণ করার প্রয়োজন নেই। তিনি ধর্মীয় গোঁড়ামি, সামাজিক কুসংস্কার ও প্রথাগত বিধি-নিষেধের বিরুদ্ধে প্রতিবাদ করেছেন। নজরুলের মতে, সত্যিকারের মানুষ হতে হলে নিজের বিবেক ও যুক্তি দিয়ে পথ বেছে নিতে হবে।
+হ্যালো! আপনি কী জানতে চান? আপনার প্রশ্নটি করুন, আমি বই থেকে উত্তর দেওয়ার চেষ্টা করব।
 ```
 
-### English Queries (Bengali Responses)
+**Query (Bengali):**
+```
+কাকে অনুপমের ভাগ্য দেবতা বলে উল্লেখ করা হয়েছে?
+```
+
+**Response:**
+```
+বই অনুযায়ী, 'অপরিচিতা' গল্পে অনুপম তার মামাকে "ভাগ্য দেবতা" বলে উল্লেখ করেছে।
+```
+
+**Query (Bangla):**
+```
+বিয়ের সময় কল্যাণীর প্রকৃত বয়স কত ছিল?
+```
+
+**Response:**
+```
+বই অনুযায়ী, বিয়ের সময় কল্যাণীর প্রকৃত বয়স ছিল ১৫ বছর।
+```
 
 **Query (English):**
 ```
-What is the theme of Rabindranath Tagore's "Gitanjali"?
+Who is the author of the story?
 ```
-
 **Response:**
 ```
-রবীন্দ্রনাথ ঠাকুরের 'গীতাঞ্জলি' কাব্যগ্রন্থের মূল বিষয়বস্তু হলো ভক্তি ও আধ্যাত্মিকতা। এই কাব্যগ্রন্থে কবি ঈশ্বরের প্রতি তাঁর গভীর ভালোবাসা ও নিবেদনের কথা ব্যক্ত করেছেন। গীতাঞ্জলির কবিতাগুলোতে মানুষ ও স্রষ্টার মধ্যকার সম্পর্ক, জীবনের অর্থ, মৃত্যুচেতনা এবং পরমপ্রেমের বিষয়গুলো স্থান পেয়েছে। এই কাব্যগ্রন্থের জন্য রবীন্দ্রনাথ ১৯১৩ সালে নোবেল পুরস্কার লাভ করেন।
+বই অনুযায়ী, 'অপরিচিতা' গল্পের রচয়িতা রবীন্দ্রনাথ ঠাকুর।
 ```
 
 ## 🤔 A few Q&A regarding the project
 
 #### 1. What method or library did you use to extract the text, and why? Did you face any formatting challenges with the PDF content?
-I employed pdf2image to convert each PDF page into a high‑resolution image, followed by pytesseract with the Bengali trained data to perform optical character recognition. This approach was necessary because, despite the fonts being selectable, they were not mapped to Unicode code points. Preprocessing steps—such as binarisation and noise reduction—were applied to improve the clarity of the scanned text and thereby enhance recognition accuracy
+I used pdf2image to convert each PDF page into an image, followed by pytesseract with Bengali-trained data to perform optical character recognition. This approach was necessary because, despite the fonts being selectable, they were not mapped to Unicode code points. Preprocessing steps—such as binarisation and noise reduction—were applied to improve the clarity of the scanned text and thereby enhance recognition accuracy
 
 #### 2. What chunking strategy did you choose (e.g. paragraph-based, sentence-based, character limit)? Why do you think it works well for semantic retrieval?
-I opted for a sentence‑based segmentation method. Firstly, the raw text was cleaned using the bnlp toolkit to remove artefacts and standardise punctuation. Subsequently, I split on sentence boundaries detected by the semantic splitter using OPENAI's ```text-embedding-3-large``` with breakpoint thresold amount as `0.8`, rather than imposing arbitrary character limits. This yields self‑contained, semantically coherent fragments that are well suited to vector‑based similarity search. For every page it will generate numerous embeddings based on the context. I excluded pages composed primarily of MCQs, since these often lack explanatory context and could degrade retrieval precision.
+I opted for a sentence‑based segmentation method. Firstly, the raw text was cleaned using the BNLP toolkit to remove artefacts and standardise punctuation. Subsequently, I split on sentence boundaries detected by the semantic splitter using OPENAI's ```text-embedding-3-large``` with a breakpoint threshold of `0.8`, rather than imposing arbitrary character limits. This yields self‑contained, semantically coherent fragments that are well suited to vector‑based similarity search. For every page, it will generate numerous embeddings based on the context. I excluded pages composed primarily of MCQs, since these often lack explanatory context and could degrade retrieval precision.
 
 #### 3. What embedding model did you use? Why did you choose it? How does it capture the meaning of the text?
-For vectorisation I selected the ```BGE‑m3``` embedding model, owing to its robust support for Bangla script and its capacity to process extended passages (up to 8000 tokens). The model generates dense numerical representations that capture the semantic relationships between words and phrases, facilitating the retrieval of passages that best match a given query.
+For vectorisation, I selected the ```BGE‑m3``` embedding model, owing to its robust support for Bangla script and its capacity to process extended passages (up to 8000 tokens). The model generates dense numerical representations that capture the semantic relationships between words and phrases, facilitating the retrieval of passages that best match a given query.
 
 #### 4. How are you comparing the query with your stored chunks? Why did you choose this similarity method and storage setup?
-Queries and document fragments are both encoded with the ```BGE‑m3``` model, after which cosine similarity is computed between the query vector and each fragment vector. All vectors are stored in a Pinecone index for efficient approximate nearest‑neighbour search using cosine similarity. 
+Queries and document fragments are both encoded with the ```BGE‑m3``` model, after which cosine similarity is computed between the query vector and each fragment vector. All vectors are stored in a Pinecone index (in cloud) for efficient approximate nearest‑neighbour search using cosine similarity. Cosine similarity measures the angle between two normalised vectors, making it insensitive to text length and well-suited to comparing semantic content.
 
 #### 5. How do you ensure that the question and the document chunks are compared meaningfully? What would happen if the query is vague or missing context?
-By using the same embedding model for queries and document fragments, the system ensures that both are represented in a common semantic space. A similarity threshold is applied: if the highest cosine score falls below a predetermined cutoff, the system informs the user that it cannot locate a relevant passage and suggests rephrasing or providing additional detail.
+By using the same embedding model for queries and document fragments, the system ensures that both are represented in a common semantic space. A similarity threshold is applied if the highest cosine score falls below a predetermined cutoff; the system informs the user that it cannot locate a relevant passage and suggests rephrasing or providing additional detail.
 
 #### 6. Do the results seem relevant? If not, what might improve them (e.g. better chunking, better embedding model, larger document)?
-Overall, the retrieved passages align pretty much well with user queries. Introducing post‑OCR cleaning such as common misrecognition corrections for specific Bangla characters to reduce OCR errors. Also, labeling a small subset of query–passage pairs manually and fine‑tune a cross‑encoder reranker, thereby improving precision on top results.
+Overall, the retrieved passages align pretty well with user queries. Introducing post‑OCR cleaning, such as common misrecognition corrections for specific Bangla characters to reduce OCR errors. Also, labelling a small subset of query–passage pairs manually and fine-tuning a cross‑encoder reranker, thereby improving precision on top results.
 
 ## 📚 API Documentation
 
@@ -187,6 +194,59 @@ http://127.0.0.1:8000
   ]
 }
 ```
+
+**Example Response**
+```json
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a chill **school teacher** who prioritizes answering from **books and authoritative sources** before providing answers. Your responses must meet these criteria:\n- Firstly try to answer from a relevant book or text. If the book-based answer is **not available or incomplete**, you may **still attempt** to respond based on your knowledge.\n- If you're **not confident** in the answer (even after attempting outside sources), respond politely:\n  - Say: “দুঃখিত!! আমি নিশ্চিত নই”.\n- **Answer in Bengali**, regardless of the user's language.\n- Users may ask questions in **any language**, but your responses remain in **Bengali**."
+    },
+    {
+      "role": "user",
+      "content": "Hi!"
+    },
+    {
+      "role": "assistant",
+      "content": "হ্যালো! আপনি কী জানতে চান? আপনার প্রশ্নটি করুন, আমি বই থেকে উত্তর দেওয়ার চেষ্টা করব।"
+    },
+    {
+      "role": "user",
+      "content": "কাকে অনুপমের ভাগ্য দেবতা বলে উল্লেখ করা হয়েছে?"
+    },
+    {
+      "role": "assistant",
+      "content": "বই অনুযায়ী, 'অপরিচিতা' গল্পে অনুপম তার মামাকে \"ভাগ্য দেবতা\" বলে উল্লেখ করেছে।"
+    },
+    {
+      "role": "user",
+      "content": "বিয়ের সময় কল্যাণীর প্রকৃত বয়স কত ছিল?"
+    },
+    {
+      "role": "assistant",
+      "content": "বই অনুযায়ী, বিয়ের সময় কল্যাণীর প্রকৃত বয়স ছিল ১৫ বছর।"
+    },
+    {
+      "role": "user",
+      "content": "Who is the author of the story?"
+    },
+    {
+      "role": "assistant",
+      "content": "বই অনুযায়ী, 'অপরিচিতা' গল্পের রচয়িতা রবীন্দ্রনাথ ঠাকুর।"
+    },
+    {
+      "role": "user",
+      "content": "Summarise our conversation"
+    },
+    {
+      "role": "assistant",
+      "content": "আপনার ও আমার কথোপকথনের সংক্ষিপ্তসার নিচে দেওয়া হলো—\n\n১. আপনি প্রথমে জানতে চেয়েছিলেন, “কাকে অনুপমের ভাগ্য দেবতা বলে উল্লেখ করা হয়েছে?”\nউত্তরে আমি বই থেকে জানাই, ‘অপরিচিতা’ গল্পে অনুপম তার মামাকে “ভাগ্য দেবতা” বলে উল্লেখ করেছে।\n\n২. এরপর আপনি জানতে চেয়েছিলেন, “বিয়ের সময় কল্যাণীর প্রকৃত বয়স কত ছিল?”\nআমি বই থেকে উত্তর দিই, বিয়ের সময় কল্যাণীর প্রকৃত বয়স ছিল ১৫ বছর।\n\n৩. এরপর আপনি ইংরেজিতে জানতে চেয়েছিলেন, “Who is the author of the story?”\nআমি বই থেকে উত্তর দিই, ‘অপরিচিতা’ গল্পের রচয়িতা রবীন্দ্রনাথ ঠাকুর।\n\nএই ছিল আমাদের সংক্ষিপ্ত কথোপকথন। আমি সব প্রশ্নের উত্তর বই থেকে দেওয়ার চেষ্টা করেছি।"
+    }
+  ]
+}
+```
+
 
 ## 🏗️ Project Structure
 
