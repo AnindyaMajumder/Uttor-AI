@@ -1,10 +1,10 @@
-from core.retriever import retriever
-from core.model import model
+from .core.retriever import retriever
+from .core.model import model
 
 from langchain_core.runnables import RunnablePassthrough 
 from langchain_core.output_parsers import StrOutputParser 
 
-def get_answer(query: str):
+def get_answer(query: str, history: list = None):
     # Get retriever results using the query
     retriever_results = retriever(query)
     
@@ -25,8 +25,8 @@ def get_answer(query: str):
         | llm
         | StrOutputParser()
     )
-    inputs = {"context": context, "question": query}
+    inputs = {"context": context, "question": query, "history": history or []}
     result = chain.invoke(inputs)
     return result
 
-print(get_answer("কষ্টি পাথর নিয়ে কে বসে ছিল?")) # শ্যাকরা
+# print(get_answer("কষ্টি পাথর নিয়ে কে বসে ছিল?")) # শ্যাকরা
