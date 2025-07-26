@@ -9,6 +9,7 @@
 - [🧾 Sample Queries and Outputs](#-Sample-Queries-and-Outputs)
 - [💬 Quesion & Answer regarding the project](#-A-few-Q&A-regarding-the-project)
 - [📚 API Documentation](#-api-documentation)
+- [🧪 Testing with Postman](#-testing-with-postman)
 - [🏗️ Project Structure](#️-project-structure)
 
 ## ✨ Key Features
@@ -246,6 +247,29 @@ http://127.0.0.1:8000
   ]
 }
 ```
+
+## 🧪 Testing with Postman
+
+### Quick Setup
+1. Import the `UttorAI_API_testing.postman_collection` file into Postman
+2. Start the server: `uvicorn app:app --host 127.0.0.1 --port 8000`
+3. Send requests to test the API
+
+### Manual Setup
+- **Method**: POST
+- **URL**: `http://127.0.0.1:8000/ask`
+- **Headers**: `Content-Type: application/json`
+- **Body**:
+```json
+{
+  "query": "কাকে অনুপমের ভাগ্য দেবতা বলে উল্লেখ করা হয়েছে?"
+}
+```
+
+### Test Cases
+- Bengali queries: `"বিয়ের সময় কল্যাণীর প্রকৃত বয়স কত ছিল?"`
+- English queries: `"Who is the author of the story?"`
+- Greetings: `"Hi"`
 
 
 ## 🏗️ Project Structure
