@@ -14,7 +14,7 @@ def pinecone_setup():
     if not pc.has_index(index_name):
         pc.create_index(
             name=index_name,
-            dimension=3072,
+            dimension=768,
             metric="cosine",
             spec=ServerlessSpec(cloud="aws", region="us-east-1"),
     )
