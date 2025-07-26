@@ -3,7 +3,7 @@ from bnlp import BengaliCorpus as corpus
 
 def clean_text(text):
     stopwords = corpus.stopwords
-    
+
     clean_text = CleanText(
     fix_unicode=True,
     unicode_norm=True,
@@ -15,8 +15,8 @@ def clean_text(text):
     remove_digits=False,
     remove_punct=False
     )
-    
+
     clean_text = clean_text(text)
     clean_text = " ".join([word for word in clean_text.split() if word not in stopwords])
-    
+
     return clean_text

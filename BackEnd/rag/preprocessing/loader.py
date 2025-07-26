@@ -3,7 +3,7 @@ from pdf2image import convert_from_path
 from PIL import Image
 import os
 
-def load_pdf(pdf_path = "/content/HSC26-Bangla1st-Paper.pdf"):
+def load_pdf(pdf_path = r"C:\Users\Anindya Majumder\Documents\Uttor-AI\BackEnd\rag\data\HSC26-Bangla1st-Paper.pdf"):
     images = convert_from_path(pdf_path, dpi=300)
 
     ignore_pages = [1, 19] + list(range(22, 41))
@@ -24,8 +24,3 @@ def load_pdf(pdf_path = "/content/HSC26-Bangla1st-Paper.pdf"):
         result.append(doc)
         print(f"Processed page {i}/{len(images)-1}")
     return result
-
-# texts = load_pdf()
-# with open("output.txt", "w", encoding="utf-8") as f:
-#     for item in texts:
-#         f.write(item['text'] + "\n")
