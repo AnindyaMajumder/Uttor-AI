@@ -22,8 +22,8 @@ PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index("bangla")
 
-tokenizer = AutoTokenizer.from_pretrained("sagorsarker/bangla-bert-base")
-model = AutoModel.from_pretrained("sagorsarker/bangla-bert-base")
+tokenizer = AutoTokenizer.from_pretrained("BAAI/bge-m3")
+model = AutoModel.from_pretrained("BAAI/bge-m3")
 
 def retriever(query_text: str = "রসনচৌকি' শব্দের অর্থ কী?"):
     # Tokenize and generate the embedding for the query text

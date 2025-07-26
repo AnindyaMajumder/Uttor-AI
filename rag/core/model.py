@@ -19,7 +19,7 @@ def model():
     
 
     llm = ChatOpenAI(
-        model="gpt-4-turbo", 
+        model="gpt-4.1", 
         api_key=api_key, 
         temperature=0.1)
     

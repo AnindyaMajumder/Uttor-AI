@@ -14,9 +14,9 @@ pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 
 index_name = "bangla"
 
-# Load the Bangla BERT model and tokenizer
-tokenizer = AutoTokenizer.from_pretrained("sagorsarker/bangla-bert-base")
-model = AutoModel.from_pretrained("sagorsarker/bangla-bert-base")
+# Load the BAAI/bge-m3 model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained("BAAI/bge-m3")
+model = AutoModel.from_pretrained("BAAI/bge-m3")
 
 index = pc.Index(index_name)
 
@@ -24,8 +24,7 @@ def embeddings(documents):
     upsert_data = []
 
     for doc in tqdm(documents):
-        text = doc.page_content # Access page_content from the Document object
-        # inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+        text = doc.page_content
         inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
 
         # Get embeddings (mean of the last hidden state)
