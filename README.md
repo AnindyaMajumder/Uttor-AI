@@ -14,8 +14,8 @@
 
 ## ✨ Key Features
 
-- 🎯 **Subject-Specific Expertise**: Focused on HSC Bangla 1st Paper content using **pytesseract** and **pdf2image** for document processing
-- 🧠 **Smart Processing**: Bengali text processing with **bnlp_toolkit** 
+- 🎯 **Subject-Specific Expertise**: Focused on HSC Bangla 1st Paper content
+  - 🧠 **Smart Processing**: Bengali text processing with **bnlp_toolkit** and semantic chunking using text-embedding-3-large
 - 🔍 **Intelligent Retrieval**: Advanced RAG system with **Pinecone** vector database and **BAAI/bge-m3** embeddings for accurate context matching
 - 🌐 **Multilingual Input**: Accepts questions in any language 
 - 📚 **Book-First Approach**: Prioritizes answers from provided pdf
@@ -85,13 +85,13 @@
 5. **Set up environment variables**
    Create a `.env` file in the root directory:
    ```env
-   OPENAI_API_KEY=your_openai_api_key_here
-   PINECONE_API_KEY=your_pinecone_api_key_here
-   INDEX_NAME=bangla
+   OPENAI_API_KEY=<your_openai_api_key>
+   PINECONE_API_KEY=<your_pinecone_api_key>
+   INDEX_NAME=<your_index_name>
    ```
 
 6. **Vectordb (Pinecone) Setup**
-  The script `rag/vectorstore.py` is responsible for generating embeddings from your documents and storing them in the Pinecone vector database. Make sure your database/index is set up before running the main application.
+  The script `rag/vectorstore.py` is responsible for generating embeddings from your documents and storing them in the Pinecone vector database. Make sure your database and index is set up before running the main application.
   After setting up the database and running the embedding process, you can execute `app.py` to start the API server.
 
 1. **Run the application**
@@ -103,8 +103,8 @@
 
 2. **Test on Postman**
    
-   Enter with `POST` request at -> `http://127.0.0.1:8000`
-   Send `JSON` request as `raw body` like 
+   Enter with `POST` request at -> `http://127.0.0.1:8000` and
+   send `JSON` request as `raw body` like 
    ```
    {
      "query": "অনুপমের ভাষায় সুপুরুষ কাকে বলা হয়েছে?"
@@ -113,8 +113,6 @@
    Another `JSON` file with short-term memory will return as resonse.
 
 ## 🧾 Sample Queries and Outputs
-
-### Bengali Queries
 
 **Query (English):**
 ```
@@ -158,10 +156,10 @@ Who is the author of the story?
 ## 🤔 A few Q&A regarding the project
 
 #### 1. What method or library did you use to extract the text, and why? Did you face any formatting challenges with the PDF content?
-I used pdf2image to convert each PDF page into an image, followed by pytesseract with Bengali-trained data to perform optical character recognition. This approach was necessary because, despite the fonts being selectable, they were not mapped to Unicode code points. Preprocessing steps—such as binarisation and noise reduction—were applied to improve the clarity of the scanned text and thereby enhance recognition accuracy
+I used `pdf2image` to convert each PDF page into an image, followed by `pytesseract` with Bengali-trained data to perform optical character recognition. This approach was necessary because, despite the fonts being selectable, they were not mapped to Unicode code points. Preprocessing steps, such as binarisation and noise reduction—were applied to improve the clarity of the scanned text and thereby enhance recognition accuracy
 
 #### 2. What chunking strategy did you choose (e.g. paragraph-based, sentence-based, character limit)? Why do you think it works well for semantic retrieval?
-I opted for a sentence‑based segmentation method. Firstly, the raw text was cleaned using the BNLP toolkit to remove artefacts and standardise punctuation. Subsequently, I split on sentence boundaries detected by the semantic splitter using OPENAI's ```text-embedding-3-large``` with a breakpoint threshold of `0.8`, rather than imposing arbitrary character limits. This yields self‑contained, semantically coherent fragments that are well suited to vector‑based similarity search. For every page, it will generate numerous embeddings based on the context. I excluded pages composed primarily of MCQs, since these often lack explanatory context and could degrade retrieval precision.
+I opted for a sentence‑based segmentation method. Firstly, the raw text was cleaned using the `BNLP toolkit` to remove artefacts and standardise punctuation. Subsequently, I split on sentence boundaries detected by the semantic splitter using OPENAI's ```text-embedding-3-large``` with a breakpoint threshold of `0.8`, rather than imposing arbitrary character limits. This yields self‑contained, semantically coherent fragments that are well suited to vector‑based similarity search. For every page, it will generate numerous embeddings based on the context. I excluded pages composed primarily of MCQs, since these often lack explanatory context and could degrade retrieval precision (work as noise for this case).
 
 #### 3. What embedding model did you use? Why did you choose it? How does it capture the meaning of the text?
 For vectorisation, I selected the ```BGE‑m3``` embedding model, owing to its robust support for Bangla script and its capacity to process extended passages (up to 8000 tokens). The model generates dense numerical representations that capture the semantic relationships between words and phrases, facilitating the retrieval of passages that best match a given query.
@@ -173,7 +171,7 @@ Queries and document fragments are both encoded with the ```BGE‑m3``` model, a
 By using the same embedding model for queries and document fragments, the system ensures that both are represented in a common semantic space. A similarity threshold is applied if the highest cosine score falls below a predetermined cutoff; the system informs the user that it cannot locate a relevant passage and suggests rephrasing or providing additional detail.
 
 #### 6. Do the results seem relevant? If not, what might improve them (e.g. better chunking, better embedding model, larger document)?
-Overall, the retrieved passages align pretty well with user queries. Introducing post‑OCR cleaning, such as common misrecognition corrections for specific Bangla characters to reduce OCR errors. Also, labelling a small subset of query–passage pairs manually and fine-tuning a cross‑encoder reranker, thereby improving precision on top results.
+Overall, the retrieved passages align pretty well with user queries. Mapping the font with unicode would be great for robust text extraction. Introducing post‑OCR cleaning, such as common misrecognition corrections for specific Bangla characters to reduce OCR errors. Also, labelling a small subset of query–passage pairs manually and fine-tuning a cross‑encoder reranker, thereby improving precision on top results.
 
 ## 📚 API Documentation
 
@@ -296,6 +294,7 @@ Uttor-AI/
 ├── app.py                 # FastAPI application entry point
 ├── requirements.txt       # Python dependencies
 ├── README.md             # Project documentation
+├── UttorAI_API_testing.postman_collection # Postman API testing
 ├── LICENSE               # Project license
 └── rag/                  # RAG implementation
     ├── chain.py          # Main RAG chain logic
