@@ -94,14 +94,13 @@
   The script `rag/vectorstore.py` is responsible for generating embeddings from your documents and storing them in the Pinecone vector database. Make sure your database and index is set up before running the main application.
   After setting up the database and running the embedding process, you can execute `app.py` to start the API server.
 
-1. **Run the application**
+7. **Run the application**
    ```bash
    uvicorn app:app --host 127.0.0.1 --port 8000
    ```
-
    The API will be available at `http://127.0.0.1:8000`
 
-2. **Test on Postman**
+8. **Test on Postman**
    
    Enter with `POST` request at -> `http://127.0.0.1:8000` and
    send `JSON` request as `raw body` like 
@@ -110,7 +109,14 @@
      "query": "অনুপমের ভাষায় সুপুরুষ কাকে বলা হয়েছে?"
    }
    ```
-   Another `JSON` file with short-term memory will return as resonse.
+   Another `JSON` file with short-term memory will return as response.
+
+9. **Evaluate the model's answers (optional):**
+   - To automatically evaluate the model's answers using a set of QA pairs, run:
+     ```bash
+     python evaluation/eval.py
+     ```
+   - This will generate an `evaluation_scores.csv` file with RAGAS metrics for faithfulness, answer relevancy, correctness, and semantic similarity.
 
 ## 🧾 Sample Queries and Outputs
 
@@ -169,6 +175,8 @@ Queries and document fragments are both encoded with the ```BGE‑m3``` model, a
 
 #### 5. How do you ensure that the question and the document chunks are compared meaningfully? What would happen if the query is vague or missing context?
 By using the same embedding model for queries and document fragments, the system ensures that both are represented in a common semantic space. A similarity threshold is applied if the highest cosine score falls below a predetermined cutoff; the system informs the user that it cannot locate a relevant passage and suggests rephrasing or providing additional detail.
+
+To further validate meaningful comparison, automated evaluation is performed using RAGAS metrics (faithfulness, answer relevancy, correctness, and semantic similarity) on a set of QA pairs. This quantifies how well the system retrieves and answers questions.
 
 #### 6. Do the results seem relevant? If not, what might improve them (e.g. better chunking, better embedding model, larger document)?
 Overall, the retrieved passages align pretty well with user queries. Mapping the font with unicode would be great for robust text extraction. Introducing post‑OCR cleaning, such as common misrecognition corrections for specific Bangla characters to reduce OCR errors. Also, labelling a small subset of query–passage pairs manually and fine-tuning a cross‑encoder reranker, thereby improving precision on top results.
@@ -263,6 +271,24 @@ http://127.0.0.1:8000
 }
 ```
 
+## 🧪 Evaluation
+
+### Automated Evaluation
+
+You can evaluate the model's performance on a set of predefined QA pairs using the script `evaluation/eval.py`. This script will:
+
+- Load questions and answers from `evaluation/qa.csv`
+- Use the RAG pipeline to generate answers
+- Compare the generated answers to the ground truth using RAGAS metrics (faithfulness, answer relevancy, answer correctness, semantic similarity)
+- Save the results to `evaluation/evaluation_scores.csv`
+
+To run the evaluation:
+```bash
+python evaluation/eval.py
+```
+
+---
+
 ## 🧪 Testing with Postman
 
 ### Quick Setup
@@ -291,23 +317,27 @@ http://127.0.0.1:8000
 
 ```
 Uttor-AI/
-├── app.py                 # FastAPI application entry point
-├── requirements.txt       # Python dependencies
-├── README.md             # Project documentation
-├── UttorAI_API_testing.postman_collection # Postman API testing
-├── LICENSE               # Project license
-└── rag/                  # RAG implementation
-    ├── chain.py          # Main RAG chain logic
-    ├── vectorstore.py    # Vector store operations
-    ├── core/             # Core RAG components
-    │   ├── embeddings.py # Embedding models
-    │   ├── model.py      # Language model setup
-    │   ├── retriever.py  # Document retrieval logic
-    │   └── setup.py      # Database Index status check
-    ├── data/             # Dataset corpus for context 
-    │   └── HSC26-Bangla1st-Paper.pdf
-    └── preprocessing/    # Data processing
-        ├── clean_text.py # Text cleaning utilities
-        ├── loader.py     # Document loaders
-        └── splitter.py   # Text chunking with semantic splitter
+├── app.py                        # FastAPI application entry point
+├── requirements.txt              # Python dependencies
+├── README.md                     # Project documentation
+├── UttorAI_API_testing.postman_collection  # Postman API testing
+├── LICENSE                       # Project license
+├── evaluation/
+│   ├── eval.py                   # Evaluation script
+│   ├── evaluation_scores.csv     # Evaluation results (generated)
+│   └── qa.csv                    # QA pairs for evaluation
+└── rag/
+    ├── chain.py                  # Main RAG chain logic
+    ├── vectorstore.py            # Vector store operations
+    ├── core/
+    │   ├── embeddings.py         # Embedding models
+    │   ├── model.py              # Language model setup
+    │   ├── retriever.py          # Document retrieval logic
+    │   └── setup.py              # Database Index status check
+    ├── data/
+    │   └── HSC26-Bangla1st-Paper.pdf  # Dataset corpus for context
+    └── preprocessing/
+        ├── clean_text.py         # Text cleaning utilities
+        ├── loader.py             # Document loaders
+        └── splitter.py           # Text chunking with semantic splitter
 ```
